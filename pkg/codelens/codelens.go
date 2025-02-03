@@ -67,7 +67,7 @@ func CollectCode(config types.CodeLensConfig) (*types.CodeLensResult, error) {
 		}
 
 		// Check file size
-		if info.Size() > config.MaxFileSize {
+		if config.MaxFileSize != -1 && info.Size() > config.MaxFileSize {
 			return nil
 		}
 

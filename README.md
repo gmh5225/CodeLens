@@ -82,7 +82,7 @@ codelens cleanall
 - `--depth, -d`: Git clone depth (default: 1, 0 for full history)
 - `--skip-tags`: Skip downloading Git tags (default: true)
 - `--filter, -f`: File patterns to clone (empty for all files)
-- `--max-size, -s`: Maximum file size in bytes (default: 10MB)
+- `--max-size, -s`: Maximum file size in bytes (-1 for no limit)
 - `--include, -i`: File patterns to include (empty for all files)
 - `--exclude, -e`: File patterns to exclude (empty for no exclusions)
 

@@ -59,7 +59,7 @@ func Execute() {
 
 func init() {
 	// Define flags
-	rootCmd.PersistentFlags().Int64VarP(&maxFileSize, "max-size", "s", 10*1024*1024, "Maximum file size in bytes")
+	rootCmd.PersistentFlags().Int64VarP(&maxFileSize, "max-size", "s", -1, "Maximum file size in bytes (-1 for no limit)")
 	rootCmd.PersistentFlags().StringVarP(&localPath, "path", "p", "", "Local path to analyze")
 	rootCmd.PersistentFlags().StringVarP(&githubRepo, "repo", "r", "", "GitHub repository URL")
 	rootCmd.PersistentFlags().StringVarP(&outputDir, "output", "o", ".", "Output directory for analysis results")
