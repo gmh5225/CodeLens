@@ -22,7 +22,7 @@ This will install the `codelens` binary to your `$GOPATH/bin` directory. Make su
 
 Alternatively, you can specify a specific version or commit:
 ```bash
-go install github.com/gmh5225/codelens@v1.0.0
+go install github.com/gmh5225/codelens@v1.0.1
 # or use a specific commit
 go install github.com/gmh5225/codelens@commit-hash
 ```
