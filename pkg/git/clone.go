@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/gmh5225/GodeLens/pkg/types"
+	"github.com/gmh5225/codelens/pkg/types"
 )
 
 // checkGitInstalled verifies if git is available in the system

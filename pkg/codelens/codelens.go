@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gmh5225/GodeLens/pkg/types"
+	"github.com/gmh5225/codelens/pkg/types"
 )
 
 // DefaultIgnorePatterns default patterns for files to ignore

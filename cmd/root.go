@@ -1,0 +1,61 @@
+package cmd
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/spf13/cobra"
+)
+
+var (
+	// CLI flags
+	maxFileSize    int64
+	localPath      string
+	githubRepo     string
+	outputDir      string
+	includePattern []string
+	excludePattern []string
+)
+
+var rootCmd = &cobra.Command{
+	Use:   "codelens",
+	Short: "CodeLens is a code analysis tool",
+	Long: `CodeLens analyzes code repositories and generates a markdown report.
+It can analyze both local directories and GitHub repositories.`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if githubRepo == "" && localPath == "" {
+			return fmt.Errorf("either --repo or --path must be specified")
+		}
+
+		if githubRepo != "" && localPath != "" {
+			return fmt.Errorf("cannot specify both --repo and --path")
+		}
+
+		// Create output directory if it doesn't exist
+		if err := os.MkdirAll(outputDir, 0755); err != nil {
+			return fmt.Errorf("failed to create output directory: %w", err)
+		}
+
+		if githubRepo != "" {
+			return analyzeGitRepo(githubRepo, outputDir)
+		}
+		return analyzeLocalPath(localPath, outputDir)
+	},
+}
+
+func Execute() {
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+func init() {
+	// Define flags
+	rootCmd.PersistentFlags().Int64VarP(&maxFileSize, "max-size", "s", 10*1024*1024, "Maximum file size in bytes")
+	rootCmd.PersistentFlags().StringVarP(&localPath, "path", "p", "", "Local path to analyze")
+	rootCmd.PersistentFlags().StringVarP(&githubRepo, "repo", "r", "", "GitHub repository URL")
+	rootCmd.PersistentFlags().StringVarP(&outputDir, "output", "o", ".", "Output directory for analysis results")
+	rootCmd.PersistentFlags().StringArrayVarP(&includePattern, "include", "i", []string{"*.go", "*.md"}, "File patterns to include")
+	rootCmd.PersistentFlags().StringArrayVarP(&excludePattern, "exclude", "e", []string{"vendor/*", "*_test.go"}, "File patterns to exclude")
+}

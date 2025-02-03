@@ -14,7 +14,7 @@ go.work
 !go.sum
 
 # Project specific
-.godelens/
+.codelens/
 
 # Binaries
 bin/
@@ -51,3 +51,8 @@ temp/
 # Log files
 *.log
 logs/ 
+
+
+# bin   
+codelens
+
