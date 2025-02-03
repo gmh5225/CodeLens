@@ -8,6 +8,10 @@ type CloneConfig struct {
 	Commit      string // Commit hash (optional)
 	KeepFiles   bool   // Whether to keep cloned files
 	ValidateURL bool
+	// New options
+	FilterPaths []string // Only clone specific paths
+	Depth       int      // Clone depth (0 for full history)
+	NoTags      bool     // Don't clone tags
 }
 
 // CodeLensConfig configuration for code collection

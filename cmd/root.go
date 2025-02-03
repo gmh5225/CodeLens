@@ -10,12 +10,15 @@ import (
 var (
 	// CLI flags
 	maxFileSize    int64
+	filterPaths    []string
 	localPath      string
 	githubRepo     string
 	outputDir      string
 	branch         string
 	cleanRepo      bool
 	validateURL    bool
+	cloneDepth     int
+	skipTags       bool
 	includePattern []string
 	excludePattern []string
 )
@@ -63,6 +66,9 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&branch, "branch", "b", "", "Git branch to analyze (default: repository's default branch)")
 	rootCmd.PersistentFlags().BoolVarP(&cleanRepo, "clean", "c", false, "Clean up repository after analysis")
 	rootCmd.PersistentFlags().BoolVarP(&validateURL, "validate", "v", false, "Validate Git repository URL")
+	rootCmd.PersistentFlags().IntVarP(&cloneDepth, "depth", "d", 1, "Git clone depth (0 for full history)")
+	rootCmd.PersistentFlags().BoolVar(&skipTags, "skip-tags", true, "Skip downloading Git tags")
+	rootCmd.PersistentFlags().StringArrayVarP(&filterPaths, "filter", "f", []string{}, "File patterns to clone (empty for all files)")
 	rootCmd.PersistentFlags().StringArrayVarP(&includePattern, "include", "i", []string{"*.go", "*.md"}, "File patterns to include")
 	rootCmd.PersistentFlags().StringArrayVarP(&excludePattern, "exclude", "e", []string{"vendor/*", "*_test.go"}, "File patterns to exclude")
 }

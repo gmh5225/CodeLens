@@ -37,6 +37,9 @@ func analyzeGitRepo(repoURL, outputDir string) error {
 			Branch:      branch,
 			KeepFiles:   !cleanRepo,
 			ValidateURL: validateURL,
+			Depth:       cloneDepth,
+			NoTags:      skipTags,
+			FilterPaths: filterPaths,
 		}
 
 		fmt.Println("Cloning repository...")

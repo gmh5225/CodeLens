@@ -54,6 +54,12 @@ codelens --path ./myproject \
   --include "*.go" --include "*.md" \
   --exclude "vendor/*" --exclude "*_test.go"
 
+# Clone with specific depth and patterns
+codelens --repo https://github.com/user/repo \
+  --depth 1 \
+  --filter "*.go" --filter "*.md" \
+  --skip-tags=false
+
 # Clean up repository after analysis
 codelens --repo https://github.com/SimonWaldherr/golang-examples --clean
 
@@ -73,6 +79,9 @@ codelens cleanall
 - `--branch, -b`: Git branch to analyze (default: repository's default branch)
 - `--clean, -c`: Clean up repository after analysis
 - `--validate, -v`: Validate Git repository URL
+- `--depth, -d`: Git clone depth (default: 1, 0 for full history)
+- `--skip-tags`: Skip downloading Git tags (default: true)
+- `--filter, -f`: File patterns to clone (empty for all files)
 - `--max-size, -s`: Maximum file size in bytes (default: 10MB)
 - `--include, -i`: File patterns to include (can be specified multiple times)
 - `--exclude, -e`: File patterns to exclude (can be specified multiple times)
