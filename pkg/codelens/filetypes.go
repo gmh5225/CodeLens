@@ -40,7 +40,7 @@ func getFileType(path string) string {
 		return "c"
 	case ".cs":
 		return "csharp"
-	case ".cshtml", ".csx":
+	case ".csx":
 		return "csharp"
 	case ".rb":
 		return "ruby"
@@ -278,10 +278,6 @@ func getFileType(path string) string {
 	// Web frameworks
 	case ".vue":
 		return "vue"
-	case ".jsx":
-		return "react"
-	case ".tsx":
-		return "react"
 	case ".svelte":
 		return "svelte"
 	case ".astro":
