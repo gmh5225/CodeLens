@@ -47,6 +47,13 @@ jobs:
         else
           go build -v -o codelens-${{ matrix.goos }}-${{ matrix.goarch }}/codelens
         fi
+        cd codelens-${{ matrix.goos }}-${{ matrix.goarch }}
+        if [ "${{ matrix.goos }}" = "windows" ]; then
+          zip ../codelens-${{ matrix.goos }}-${{ matrix.goarch }}.zip codelens.exe
+        else
+          tar czf ../codelens-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz codelens
+        fi
+        cd ..
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
@@ -59,7 +66,9 @@ jobs:
       if: ${{ startsWith(github.ref, 'refs/tags/') }}
       with:
         prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') || contains(github.ref, '-pre') }}
-        files: codelens-${{ matrix.goos }}-${{ matrix.goarch }}
+        files: |
+          codelens-${{ matrix.goos }}-${{ matrix.goarch }}.zip
+          codelens-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
