@@ -17,7 +17,7 @@ type CloneConfig struct {
 // CodeLensConfig configuration for code collection
 type CodeLensConfig struct {
 	Path            string   // Local code path
-	MaxFileSize     int64    // Maximum file size limit
+	MaxFileSize     int64    // Maximum file size limit in bytes (internally converted)
 	IncludePatterns []string // File patterns to include
 	ExcludePatterns []string // File patterns to exclude
 }

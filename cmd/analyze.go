@@ -76,7 +76,7 @@ func analyzeLocalPath(path, outputDir string) error {
 
 	config := types.CodeLensConfig{
 		Path:            path,
-		MaxFileSize:     maxFileSize,
+		MaxFileSize:     int64(maxFileSize * 1024 * 1024), // Convert MB to bytes
 		IncludePatterns: includePattern,
 		ExcludePatterns: excludePattern,
 	}

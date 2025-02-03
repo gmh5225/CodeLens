@@ -9,7 +9,7 @@ import (
 
 var (
 	// CLI flags
-	maxFileSize    int64
+	maxFileSize    float64
 	filterPaths    []string
 	localPath      string
 	githubRepo     string
@@ -38,6 +38,11 @@ It can analyze both local directories and GitHub repositories.`,
 			return fmt.Errorf("must specify either --repo or --path flag")
 		}
 
+		// Validate max-size
+		if maxFileSize == 0 {
+			return fmt.Errorf("--max-size cannot be 0. Use -1 for no limit or a positive number for MB limit")
+		}
+
 		// Create output directory if it doesn't exist
 		if err := os.MkdirAll(outputDir, 0755); err != nil {
 			return fmt.Errorf("failed to create output directory: %w", err)
@@ -59,7 +64,7 @@ func Execute() {
 
 func init() {
 	// Define flags
-	rootCmd.PersistentFlags().Int64VarP(&maxFileSize, "max-size", "s", -1, "Maximum file size in bytes (-1 for no limit)")
+	rootCmd.PersistentFlags().Float64VarP(&maxFileSize, "max-size", "s", -1, "Maximum file size in MB (-1 for no limit)")
 	rootCmd.PersistentFlags().StringVarP(&localPath, "path", "p", "", "Local path to analyze")
 	rootCmd.PersistentFlags().StringVarP(&githubRepo, "repo", "r", "", "GitHub repository URL")
 	rootCmd.PersistentFlags().StringVarP(&outputDir, "output", "o", ".", "Output directory for analysis results")

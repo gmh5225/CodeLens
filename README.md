@@ -47,7 +47,7 @@ codelens --path ./myproject --output ./analysis
 ### Advanced Options
 ```bash
 # Set maximum file size (e.g., 5MB)
-codelens --path ./myproject --max-size 5242880
+codelens --path ./myproject --max-size 5
 
 # Specify file patterns
 codelens --path ./myproject \
@@ -82,7 +82,7 @@ codelens cleanall
 - `--depth, -d`: Git clone depth (default: 1, 0 for full history)
 - `--skip-tags`: Skip downloading Git tags (default: true)
 - `--filter, -f`: File patterns to clone (empty for all files)
-- `--max-size, -s`: Maximum file size in bytes (-1 for no limit)
+- `--max-size, -s`: Maximum file size in MB (-1 for no limit, cannot be 0)
 - `--include, -i`: File patterns to include (empty for all files)
 - `--exclude, -e`: File patterns to exclude (empty for no exclusions)
 
