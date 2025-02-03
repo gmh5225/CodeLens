@@ -29,6 +29,8 @@ go install github.com/gmh5225/codelens@commit-hash
 
 ## Usage
 
+> Note: The `--repo` and `--path` flags are mutually exclusive. You must specify exactly one of them.
+
 ### Analyze GitHub Repository
 ```bash
 codelens --repo https://github.com/SimonWaldherr/golang-examples --output ./analysis

@@ -25,12 +25,13 @@ var rootCmd = &cobra.Command{
 	Long: `CodeLens analyzes code repositories and generates a markdown report.
 It can analyze both local directories and GitHub repositories.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if githubRepo == "" && localPath == "" {
-			return fmt.Errorf("either --repo or --path must be specified")
+		// Validate flags
+		if githubRepo != "" && localPath != "" {
+			return fmt.Errorf("cannot specify both --repo and --path flags")
 		}
 
-		if githubRepo != "" && localPath != "" {
-			return fmt.Errorf("cannot specify both --repo and --path")
+		if githubRepo == "" && localPath == "" {
+			return fmt.Errorf("must specify either --repo or --path flag")
 		}
 
 		// Create output directory if it doesn't exist

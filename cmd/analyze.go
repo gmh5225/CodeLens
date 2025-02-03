@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -21,6 +22,13 @@ func analyzeGitRepo(repoURL, outputDir string) error {
 	// Check if repository already exists
 	if _, err := os.Stat(repoDir); err == nil {
 		fmt.Println("Using existing repository...")
+		// Update repository
+		fmt.Println("Updating repository...")
+		cmd := exec.Command("git", "-C", repoDir, "pull", "origin")
+		if output, err := cmd.CombinedOutput(); err != nil {
+			return fmt.Errorf("failed to update repository: %s: %w", output, err)
+		}
+		fmt.Println("Repository updated successfully")
 	} else {
 		// Clone repository
 		cloneConfig := types.CloneConfig{
@@ -57,6 +65,24 @@ func analyzeGitRepo(repoURL, outputDir string) error {
 func analyzeLocalPath(path, outputDir string) error {
 	fmt.Println("Starting code analysis...")
 
+	// Generate prefix based on path type
+	var prefix string
+	if localPath != "" {
+		// For local paths, use local-dirname format
+		prefix = fmt.Sprintf("local-%s", filepath.Base(localPath))
+	} else if githubRepo != "" {
+		// For GitHub repos, use author/repo format
+		parts := strings.Split(strings.TrimSuffix(githubRepo, ".git"), "/")
+		if len(parts) >= 2 {
+			author := parts[len(parts)-2]
+			repoName := parts[len(parts)-1]
+			prefix = fmt.Sprintf("%s-%s", author, repoName)
+		}
+	} else {
+		// This shouldn't happen due to validation in rootCmd
+		prefix = fmt.Sprintf("unknown-%s", filepath.Base(path))
+	}
+
 	config := types.CodeLensConfig{
 		Path:            path,
 		MaxFileSize:     maxFileSize,
@@ -70,7 +96,8 @@ func analyzeLocalPath(path, outputDir string) error {
 	}
 
 	// Generate output file path
-	outputFile := filepath.Join(outputDir, "codelens.md")
+	outputFile := filepath.Join(outputDir, fmt.Sprintf("%s-codelens.md", prefix))
+
 	if err := generateReport(result, path, outputFile); err != nil {
 		return fmt.Errorf("failed to generate report: %w", err)
 	}
