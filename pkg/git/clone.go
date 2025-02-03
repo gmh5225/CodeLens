@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"github.com/gmh5225/codelens/pkg/types"
 )
@@ -23,6 +24,13 @@ func CloneRepository(config types.CloneConfig) error {
 	// Check if git is installed
 	if err := checkGitInstalled(); err != nil {
 		return err
+	}
+
+	// Validate repository URL if required
+	if config.ValidateURL {
+		if err := validateGitURL(config.URL); err != nil {
+			return fmt.Errorf("invalid repository URL: %w", err)
+		}
 	}
 
 	// Ensure target directory exists
@@ -54,6 +62,25 @@ func CloneRepository(config types.CloneConfig) error {
 		if output, err := checkoutCmd.CombinedOutput(); err != nil {
 			return fmt.Errorf("checkout failed: %s: %w", output, err)
 		}
+	}
+
+	return nil
+}
+
+func validateGitURL(url string) error {
+	if !IsValidGitHost(url) {
+		return fmt.Errorf("unsupported Git host. Supported hosts: %v", SupportedGitHosts)
+	}
+
+	// Validate URL format
+	parts := strings.Split(strings.TrimSuffix(url, ".git"), "/")
+	if len(parts) < 5 {
+		return fmt.Errorf("invalid repository URL format")
+	}
+
+	// Validate username and repository name
+	if parts[len(parts)-2] == "" || parts[len(parts)-1] == "" {
+		return fmt.Errorf("invalid username or repository name")
 	}
 
 	return nil

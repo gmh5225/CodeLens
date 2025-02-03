@@ -32,10 +32,11 @@ func analyzeGitRepo(repoURL, outputDir string) error {
 	} else {
 		// Clone repository
 		cloneConfig := types.CloneConfig{
-			URL:       repoURL,
-			LocalPath: repoDir,
-			Branch:    branch,
-			KeepFiles: !cleanRepo,
+			URL:         repoURL,
+			LocalPath:   repoDir,
+			Branch:      branch,
+			KeepFiles:   !cleanRepo,
+			ValidateURL: validateURL,
 		}
 
 		fmt.Println("Cloning repository...")

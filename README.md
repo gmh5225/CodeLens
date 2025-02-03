@@ -57,10 +57,12 @@ codelens --path ./myproject \
 # Clean up repository after analysis
 codelens --repo https://github.com/SimonWaldherr/golang-examples --clean
 
+# Validate Git repository URL
+codelens --repo https://github.com/SimonWaldherr/golang-examples --validate
+
 # Clean all cached repositories
 codelens cleanall
 ```
-
 ## Command Line Options
 
 ### Global Flags
@@ -70,6 +72,7 @@ codelens cleanall
 - `--output, -o`: Output directory (default: ".")
 - `--branch, -b`: Git branch to analyze (default: repository's default branch)
 - `--clean, -c`: Clean up repository after analysis
+- `--validate, -v`: Validate Git repository URL
 - `--max-size, -s`: Maximum file size in bytes (default: 10MB)
 - `--include, -i`: File patterns to include (can be specified multiple times)
 - `--exclude, -e`: File patterns to exclude (can be specified multiple times)
@@ -132,3 +135,4 @@ goimports -w .
 ```
 
 The project follows standard Go formatting conventions. It's recommended to format your code before submitting any changes.
+

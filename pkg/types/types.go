@@ -2,11 +2,12 @@ package types
 
 // CloneConfig configuration for repository cloning
 type CloneConfig struct {
-	URL       string // Repository URL
-	LocalPath string // Local storage path
-	Branch    string // Branch name (optional)
-	Commit    string // Commit hash (optional)
-	KeepFiles bool   // Whether to keep cloned files
+	URL         string // Repository URL
+	LocalPath   string // Local storage path
+	Branch      string // Branch name (optional)
+	Commit      string // Commit hash (optional)
+	KeepFiles   bool   // Whether to keep cloned files
+	ValidateURL bool
 }
 
 // CodeLensConfig configuration for code collection

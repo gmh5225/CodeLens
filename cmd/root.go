@@ -15,6 +15,7 @@ var (
 	outputDir      string
 	branch         string
 	cleanRepo      bool
+	validateURL    bool
 	includePattern []string
 	excludePattern []string
 )
@@ -61,6 +62,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&outputDir, "output", "o", ".", "Output directory for analysis results")
 	rootCmd.PersistentFlags().StringVarP(&branch, "branch", "b", "", "Git branch to analyze (default: repository's default branch)")
 	rootCmd.PersistentFlags().BoolVarP(&cleanRepo, "clean", "c", false, "Clean up repository after analysis")
+	rootCmd.PersistentFlags().BoolVarP(&validateURL, "validate", "v", false, "Validate Git repository URL")
 	rootCmd.PersistentFlags().StringArrayVarP(&includePattern, "include", "i", []string{"*.go", "*.md"}, "File patterns to include")
 	rootCmd.PersistentFlags().StringArrayVarP(&excludePattern, "exclude", "e", []string{"vendor/*", "*_test.go"}, "File patterns to exclude")
 }
