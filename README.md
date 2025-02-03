@@ -31,7 +31,7 @@ go install github.com/gmh5225/codelens@commit-hash
 
 ### Analyze GitHub Repository
 ```bash
-codelens --repo https://github.com/user/repo --output ./analysis
+codelens --repo https://github.com/SimonWaldherr/golang-examples --output ./analysis
 ```
 
 ### Analyze Local Directory
