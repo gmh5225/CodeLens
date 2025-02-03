@@ -18,7 +18,11 @@ func generateReport(result *types.CodeLensResult, basePath, outputPath string) e
 	content.WriteString("This document contains a comprehensive analysis of the source code, including file structure and content. The analysis is designed to help understand the codebase structure and implementation details.\n\n")
 
 	content.WriteString("## Analysis Configuration\n")
-	content.WriteString(fmt.Sprintf("- Max file size: %.2f MB\n", float64(maxFileSize)/(1024*1024)))
+	if maxFileSize == -1 {
+		content.WriteString("- Max file size: no limit\n")
+	} else {
+		content.WriteString(fmt.Sprintf("- Max file size: %.2f MB\n", float64(maxFileSize)))
+	}
 	content.WriteString(fmt.Sprintf("- Include patterns: %v\n", includePattern))
 	content.WriteString(fmt.Sprintf("- Exclude patterns: %v\n", excludePattern))
 	content.WriteString("\n")
