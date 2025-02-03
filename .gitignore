@@ -1,0 +1,53 @@
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Output files
+*.txt
+!go.mod
+!go.sum
+
+# Project specific
+.godelens/
+
+# Binaries
+bin/
+dist/
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Dependency directories
+vendor/
+
+# Test coverage
+coverage.html
+coverage.out
+
+# Debug files
+debug
+__debug_bin
+
+# Environment variables
+.env
+.env.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Log files
+*.log
+logs/ 
