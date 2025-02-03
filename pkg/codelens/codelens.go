@@ -102,7 +102,7 @@ func CollectCode(config types.CodeLensConfig) (*types.CodeLensResult, error) {
 
 	// Generate summary information
 	result.Summary = fmt.Sprintf(
-		"Total files: %d\nTotal size: %.2f MB\n",
+		"# Summary\n- Total files: %d\n- Total size: %.2f MB\n",
 		result.TotalFiles,
 		float64(result.TotalSize)/(1024*1024),
 	)

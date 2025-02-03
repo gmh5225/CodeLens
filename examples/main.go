@@ -123,8 +123,11 @@ func main() {
     var content strings.Builder
     
     // Write basic information
+    content.WriteString(fmt.Sprintf("# Repository Code Analysis: %s\n\n", filepath.Base(repoDir)))
+    content.WriteString("This is an automated code analysis of the repository, including file structure and source code content.\n\n")
+    content.WriteString("## Summary\n")
     content.WriteString(result.Summary)
-    content.WriteString("\n---\n") // Use simple separator
+    content.WriteString("\n")
     
     // Write simplified directory structure
     var paths []string
@@ -133,12 +136,13 @@ func main() {
         paths = append(paths, relPath)
     }
     sort.Strings(paths)
-    content.WriteString("FILES:\n")
+    content.WriteString("## Repository Structure\n")
+    content.WriteString("The following files were analyzed:\n\n")
     for _, path := range paths {
-        content.WriteString(path + "\n")
+        content.WriteString("- " + path + "\n")
     }
     
-    content.WriteString("\n---\n") // Separator
+    content.WriteString("\n")
     
     for _, file := range result.Files {
         // Get relative path
@@ -149,13 +153,14 @@ func main() {
         }
         
         // Add to file content
-        content.WriteString(fmt.Sprintf("FILE: %s\n", relPath))
+        content.WriteString(fmt.Sprintf("## %s\n", relPath))
+        content.WriteString("```" + file.FileType + "\n")
         content.WriteString(file.Content)
-        content.WriteString("\n---\n") // Separator between files
+        content.WriteString("\n```\n\n")
     }
     
     // Save to file
-    outputPath := filepath.Join(repoDir, "codelens.txt")
+    outputPath := filepath.Join(repoDir, "codelens.md")
     // Remove file if it exists
     if err := os.Remove(outputPath); err != nil && !os.IsNotExist(err) {
         log.Fatal("Failed to delete old file:", err)
