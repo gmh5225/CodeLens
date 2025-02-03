@@ -41,24 +41,25 @@ jobs:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
       run: |
+        mkdir -p codelens-${{ matrix.goos }}-${{ matrix.goarch }}
         if [ "${{ matrix.goos }}" = "windows" ]; then
-          go build -v -o codelens-${{ matrix.goos }}-${{ matrix.goarch }}.exe
+          go build -v -o codelens-${{ matrix.goos }}-${{ matrix.goarch }}/codelens.exe
         else
-          go build -v -o codelens-${{ matrix.goos }}-${{ matrix.goarch }}
+          go build -v -o codelens-${{ matrix.goos }}-${{ matrix.goarch }}/codelens
         fi
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: codelens-${{ matrix.goos }}-${{ matrix.goarch }}
-        path: codelens-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.goos == 'windows' && '.exe' || '' }}
+        path: codelens-${{ matrix.goos }}-${{ matrix.goarch }}
     
     - name: Release
       uses: softprops/action-gh-release@v1
       if: ${{ startsWith(github.ref, 'refs/tags/') }}
       with:
         prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') || contains(github.ref, '-pre') }}
-        files: codelens-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.goos == 'windows' && '.exe' || '' }}
+        files: codelens-${{ matrix.goos }}-${{ matrix.goarch }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
