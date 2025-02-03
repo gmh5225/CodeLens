@@ -12,22 +12,48 @@ func getFileType(path string) string {
 	// Programming languages
 	case ".go":
 		return "golang"
+	case ".go.mod":
+		return "gomod"
+	case ".go.sum":
+		return "gosum"
+	case ".go.work":
+		return "gowork"
 	case ".py":
 		return "python"
+	case ".pyi":
+		return "pythoni"
+	case ".pyx", ".pxd":
+		return "cython"
 	case ".js", ".jsx", ".ts", ".tsx":
 		return "javascript"
+	case ".mjs", ".cjs":
+		return "javascript"
+	case ".dts", ".d.ts":
+		return "typescript"
 	case ".java":
 		return "java"
 	case ".cpp", ".cc", ".cxx", ".c++", ".hpp":
+		return "cpp"
+	case ".tpp", ".tcc", ".inl":
 		return "cpp"
 	case ".c", ".h":
 		return "c"
 	case ".cs":
 		return "csharp"
+	case ".cshtml", ".csx":
+		return "csharp"
 	case ".rb":
+		return "ruby"
+	case ".rbs", ".gemspec":
+		return "ruby"
+	case ".rake", ".ru":
 		return "ruby"
 	case ".php":
 		return "php"
+	case ".phpt", ".phtml", ".phar":
+		return "php"
+	case ".blade.php":
+		return "blade"
 	case ".rs":
 		return "rust"
 	case ".swift":
@@ -112,76 +138,160 @@ func getFileType(path string) string {
 		return "ada"
 	case ".cob", ".cbl":
 		return "cobol"
+	case ".ink":
+		return "ink"
+	case ".scilla":
+		return "scilla"
+	case ".aes":
+		return "sophia"
+	case ".ride":
+		return "ride"
+	case ".leo":
+		return "leo"
+	case ".clar":
+		return "clarity"
 
 	// Markup languages and configuration files
 	case ".md", ".markdown":
 		return "markdown"
+	case ".mdx":
+		return "mdx"
+	case ".rst":
+		return "restructuredtext"
+	case ".asciidoc", ".adoc":
+		return "asciidoc"
+	case ".tex", ".sty", ".cls":
+		return "latex"
 	case ".json":
 		return "json"
+	case ".jsonc":
+		return "jsonc"
+	case ".json5":
+		return "json5"
+	case ".jsonnet", ".libsonnet":
+		return "jsonnet"
+	case ".jsonld":
+		return "jsonld"
 	case ".xml":
 		return "xml"
+	case ".xaml":
+		return "xaml"
+	case ".plist":
+		return "plist"
+	case ".svg":
+		return "svg"
 	case ".yaml", ".yml":
 		return "yaml"
+	case ".eyaml", ".eyml":
+		return "eyaml"
 	case ".toml":
 		return "toml"
 	case ".ini":
 		return "ini"
-	case ".proto":
-		return "protobuf"
-	case ".graphql", ".gql":
-		return "graphql"
-	case ".thrift":
-		return "thrift"
-	case ".avsc":
-		return "avro"
-	case ".capnp":
-		return "capnproto"
-	case ".swagger", ".openapi":
-		return "openapi"
-	case ".raml":
-		return "raml"
-	case ".wsdl":
-		return "wsdl"
-	case ".xsd":
-		return "xsd"
-	case ".dtd":
-		return "dtd"
+	case ".conf", ".cfg":
+		return "config"
+	case ".properties":
+		return "properties"
+	case ".env":
+		return "dotenv"
 
-	// Scripting languages
-	case ".sh", ".bash":
-		return "shell"
-	case ".ps1":
-		return "powershell"
-	case ".bat", ".cmd":
-		return "batch"
-	case ".fish":
-		return "fish"
-	case ".zsh":
-		return "zsh"
-	case ".ksh":
-		return "ksh"
-	case ".tcsh":
-		return "tcsh"
-	case ".csh":
-		return "csh"
-	case ".nu":
-		return "nushell"
+	// Configuration and build files
+	case "Dockerfile":
+		return "dockerfile"
+	case ".dockerignore":
+		return "dockerignore"
+	case "Makefile", "makefile", "GNUmakefile":
+		return "makefile"
+	case "CMakeLists.txt":
+		return "cmake"
+	case ".cmake":
+		return "cmake"
+	case "Vagrantfile":
+		return "ruby"
+	case "Jenkinsfile":
+		return "groovy"
+	case ".gitlab-ci.yml":
+		return "yaml"
+	case ".travis.yml":
+		return "yaml"
+	case "azure-pipelines.yml":
+		return "yaml"
+	case ".circleci/config.yml":
+		return "yaml"
+	case ".github/workflows/*.yml":
+		return "yaml"
+	case "package.json":
+		return "json"
+	case "composer.json":
+		return "json"
+	case "cargo.toml":
+		return "toml"
+	case "poetry.lock":
+		return "toml"
 
-	// Other common file types
+	// Database and query languages
 	case ".sql":
 		return "sql"
+	case ".mysql":
+		return "mysql"
+	case ".pgsql":
+		return "postgresql"
+	case ".plsql":
+		return "plsql"
+	case ".tsql":
+		return "tsql"
+	case ".hql":
+		return "hive"
+	case ".cypher":
+		return "cypher"
+	case ".sparql":
+		return "sparql"
+
+	// Web template languages
 	case ".html", ".htm":
 		return "html"
+	case ".xhtml":
+		return "xhtml"
+	case ".shtml":
+		return "shtml"
+	case ".cshtml":
+		return "cshtml"
+	case ".jinja", ".j2":
+		return "jinja"
+	case ".njk":
+		return "nunjucks"
+	case ".webc":
+		return "webc"
+	case ".kit":
+		return "kit"
+
+	// Style languages
 	case ".css", ".scss", ".sass", ".less":
 		return "css"
+	case ".styl":
+		return "stylus"
+	case ".pcss", ".postcss":
+		return "postcss"
+	case ".sss":
+		return "sugarss"
+
+	// Web frameworks
 	case ".vue":
 		return "vue"
+	case ".jsx":
+		return "react"
+	case ".tsx":
+		return "react"
 	case ".svelte":
 		return "svelte"
 	case ".astro":
 		return "astro"
-	case ".liquid":
-		return "liquid"
+	case ".solid":
+		return "solid"
+	case ".qwik":
+		return "qwik"
+	case ".marko":
+		return "marko"
 	case ".haml":
 		return "haml"
 	case ".pug", ".jade":
