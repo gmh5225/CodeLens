@@ -36,7 +36,7 @@ go install github.com/gmh5225/codelens@commit-hash
 codelens --repo https://github.com/SimonWaldherr/golang-examples --output ./analysis
 
 # Analyze specific branch
-codelens --repo https://github.com/SimonWaldherr/golang-examples --branch main --output ./analysis
+codelens --repo https://github.com/SimonWaldherr/golang-examples --branch master --output ./analysis
 ```
 
 ### Analyze Local Directory
