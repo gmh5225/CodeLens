@@ -19,11 +19,72 @@ func checkGitInstalled() error {
 	return nil
 }
 
+// runGitCommand executes a git command with the given args
+func runGitCommand(repoPath string, args ...string) error {
+	cmd := exec.Command("git", args...)
+	if repoPath != "" {
+		args = append([]string{"-C", repoPath}, args...)
+		cmd = exec.Command("git", args...)
+	}
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+// setupSparseCheckout configures sparse-checkout with given patterns
+func setupSparseCheckout(repoPath string, patterns []string) error {
+	// Enable sparse-checkout without cone mode
+	if err := runGitCommand(repoPath, "sparse-checkout", "init", "--no-cone"); err != nil {
+		return fmt.Errorf("failed to enable sparse-checkout: %w", err)
+	}
+
+	// Set patterns
+	if err := runGitCommand(repoPath, "sparse-checkout", "set", "--no-cone", strings.Join(patterns, " ")); err != nil {
+		return fmt.Errorf("failed to set sparse-checkout patterns: %w", err)
+	}
+
+	return nil
+}
+
 // CloneRepository clones a Git repository
 func CloneRepository(config types.CloneConfig) error {
 	// Check if git is installed
-	if err := checkGitInstalled(); err != nil {
-		return err
+	if err := runGitCommand("", "--version"); err != nil {
+		return fmt.Errorf("git is not installed or not available in PATH: %w", err)
+	}
+
+	// Check if repository already exists
+	if _, err := os.Stat(config.LocalPath); err == nil {
+		fmt.Println("Repository exists, updating...")
+
+		// Fetch latest changes
+		if err := runGitCommand(config.LocalPath, "fetch", "origin"); err != nil {
+			return fmt.Errorf("failed to fetch updates: %w", err)
+		}
+
+		// Reset to latest changes
+		if err := runGitCommand(config.LocalPath, "reset", "--hard", "origin/HEAD"); err != nil {
+			return fmt.Errorf("failed to reset to latest changes: %w", err)
+		}
+
+		// Configure sparse-checkout if needed
+		if len(config.FilterPaths) > 0 && config.FilterPaths[0] != "" {
+			if err := setupSparseCheckout(config.LocalPath, config.FilterPaths); err != nil {
+				return err
+			}
+		} else {
+			// Disable sparse-checkout if no filters
+			if err := runGitCommand(config.LocalPath, "sparse-checkout", "disable"); err != nil {
+				return fmt.Errorf("failed to disable sparse-checkout: %w", err)
+			}
+
+			// Checkout all files
+			if err := runGitCommand(config.LocalPath, "checkout", "HEAD"); err != nil {
+				return fmt.Errorf("failed to checkout files: %w", err)
+			}
+		}
+
+		return nil
 	}
 
 	// Validate repository URL if required
@@ -43,7 +104,7 @@ func CloneRepository(config types.CloneConfig) error {
 	// Add sparse checkout if paths are specified
 	if len(config.FilterPaths) > 0 && config.FilterPaths[0] != "" {
 		args = append(args, "--sparse")
-		args = append(args, "--filter=blob:none")
+		args = append(args, "--no-checkout") // 先不检出文件，等设置好 sparse-checkout 后再检出
 	}
 
 	// Add depth parameter
@@ -56,9 +117,6 @@ func CloneRepository(config types.CloneConfig) error {
 		args = append(args, "--branch", config.Branch)
 	}
 
-	// Add single branch option
-	args = append(args, "--single-branch")
-
 	// Skip tags if requested
 	if config.NoTags {
 		args = append(args, "--no-tags")
@@ -68,45 +126,25 @@ func CloneRepository(config types.CloneConfig) error {
 	args = append(args, config.URL, config.LocalPath)
 
 	fmt.Printf("Running git command: git %s\n", strings.Join(args, " "))
-	cmd := exec.Command("git", args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
+	if err := runGitCommand("", args...); err != nil {
 		return fmt.Errorf("clone failed: %w", err)
 	}
 
 	// If using sparse checkout, set up patterns
 	if len(config.FilterPaths) > 0 && config.FilterPaths[0] != "" {
-		// First enable sparse-checkout
-		cmd = exec.Command("git", "-C", config.LocalPath, "config", "core.sparseCheckout", "true")
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		if err := cmd.Run(); err != nil {
-			return fmt.Errorf("failed to enable sparse-checkout: %w", err)
+		if err := setupSparseCheckout(config.LocalPath, config.FilterPaths); err != nil {
+			return err
 		}
 
-		// Create sparse-checkout file with patterns
-		sparseFile := filepath.Join(config.LocalPath, ".git", "info", "sparse-checkout")
-		content := strings.Join(config.FilterPaths, "\n")
-		if err := os.WriteFile(sparseFile, []byte(content), 0644); err != nil {
-			return fmt.Errorf("failed to write sparse-checkout patterns: %w", err)
-		}
-
-		// Update the working tree
-		cmd = exec.Command("git", "-C", config.LocalPath, "read-tree", "-mu", "HEAD")
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		if err := cmd.Run(); err != nil {
-			return fmt.Errorf("failed to update working tree: %w", err)
+		// Checkout files
+		if err := runGitCommand(config.LocalPath, "checkout"); err != nil {
+			return fmt.Errorf("failed to checkout files: %w", err)
 		}
 	}
 
 	// If commit is specified, perform checkout
 	if config.Commit != "" {
-		cmd = exec.Command("git", "-C", config.LocalPath, "checkout", config.Commit)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		if err := cmd.Run(); err != nil {
+		if err := runGitCommand(config.LocalPath, "checkout", config.Commit); err != nil {
 			return fmt.Errorf("checkout failed: %w", err)
 		}
 	}
@@ -128,39 +166,6 @@ func validateGitURL(url string) error {
 	// Validate username and repository name
 	if parts[len(parts)-2] == "" || parts[len(parts)-1] == "" {
 		return fmt.Errorf("invalid username or repository name")
-	}
-
-	return nil
-}
-
-// setupSparseCheckout configures sparse checkout for specific paths
-func setupSparseCheckout(repoPath string, paths []string) error {
-	// Enable sparse-checkout
-	cmd := exec.Command("git", "-C", repoPath, "config", "core.sparseCheckout", "true")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return err
-	}
-
-	// Create sparse-checkout file
-	sparseFile := filepath.Join(repoPath, ".git", "info", "sparse-checkout")
-	if err := os.MkdirAll(filepath.Dir(sparseFile), 0755); err != nil {
-		return fmt.Errorf("failed to create sparse-checkout directory: %w", err)
-	}
-
-	// Write patterns to sparse-checkout file
-	content := strings.Join(paths, "\n")
-	if err := os.WriteFile(sparseFile, []byte(content), 0644); err != nil {
-		return fmt.Errorf("failed to write sparse-checkout file: %w", err)
-	}
-
-	// Read the working tree
-	cmd = exec.Command("git", "-C", repoPath, "read-tree", "-mu", "HEAD")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to read-tree: %w", err)
 	}
 
 	return nil

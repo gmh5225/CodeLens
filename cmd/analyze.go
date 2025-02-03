@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -19,33 +18,21 @@ func analyzeGitRepo(repoURL, outputDir string) error {
 		return err
 	}
 
-	// Check if repository already exists
-	if _, err := os.Stat(repoDir); err == nil {
-		fmt.Println("Using existing repository...")
-		// Update repository
-		fmt.Println("Updating repository...")
-		cmd := exec.Command("git", "-C", repoDir, "pull", "origin")
-		if output, err := cmd.CombinedOutput(); err != nil {
-			return fmt.Errorf("failed to update repository: %s: %w", output, err)
-		}
-		fmt.Println("Repository updated successfully")
-	} else {
-		// Clone repository
-		cloneConfig := types.CloneConfig{
-			URL:         repoURL,
-			LocalPath:   repoDir,
-			Branch:      branch,
-			KeepFiles:   !cleanRepo,
-			ValidateURL: validateURL,
-			Depth:       cloneDepth,
-			NoTags:      skipTags,
-			FilterPaths: filterPaths,
-		}
+	// Clone or update repository
+	cloneConfig := types.CloneConfig{
+		URL:         repoURL,
+		LocalPath:   repoDir,
+		Branch:      branch,
+		KeepFiles:   !cleanRepo,
+		ValidateURL: validateURL,
+		Depth:       cloneDepth,
+		NoTags:      skipTags,
+		FilterPaths: filterPaths,
+	}
 
-		fmt.Println("Cloning repository...")
-		if err := git.CloneRepository(cloneConfig); err != nil {
-			return fmt.Errorf("clone failed: %w", err)
-		}
+	fmt.Println("Cloning repository...")
+	if err := git.CloneRepository(cloneConfig); err != nil {
+		return fmt.Errorf("clone failed: %w", err)
 	}
 
 	// Analyze the repository

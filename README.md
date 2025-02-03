@@ -131,16 +131,6 @@ To format all Go files in the repository:
 ```bash
 # Using gofmt (built-in)
 gofmt -w .
-
-# Or using goimports (recommended, handles imports automatically)
-go install golang.org/x/tools/cmd/goimports@latest
-
-# Make sure $GOPATH/bin is in your PATH
-# Add to ~/.zshrc or ~/.bashrc:
-# export GOPATH=$HOME/go
-# export PATH=$PATH:$GOPATH/bin
-
-goimports -w .
 ```
 
 The project follows standard Go formatting conventions. It's recommended to format your code before submitting any changes.
