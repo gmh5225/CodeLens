@@ -20,6 +20,8 @@ analysis/
 # Binaries
 bin/
 dist/
+/codelens
+!codelens/
 
 # IDE specific
 .idea/
