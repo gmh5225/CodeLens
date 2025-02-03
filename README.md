@@ -63,7 +63,7 @@ codelens --repo https://github.com/user/repo \
 # Clean up repository after analysis
 codelens --repo https://github.com/SimonWaldherr/golang-examples --clean
 
-# Validate Git repository URL
+# Validate Git repository URL(for security)
 codelens --repo https://github.com/SimonWaldherr/golang-examples --validate
 
 # Clean all cached repositories
