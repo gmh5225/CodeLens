@@ -55,7 +55,7 @@ codelens --path ./myproject \
   --exclude "vendor/*" --exclude "*_test.go"
 
 # Clone with specific depth and patterns
-codelens --repo https://github.com/user/repo \
+codelens --repo https://github.com/SimonWaldherr/golang-examples \
   --depth 1 \
   --filter "*.go" --filter "*.md" \
   --skip-tags=false
