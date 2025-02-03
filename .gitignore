@@ -15,10 +15,12 @@ go.work
 
 # Project specific
 .codelens/
+analysis/
 
 # Binaries
 bin/
 dist/
+codelens
 
 # IDE specific
 .idea/
@@ -52,7 +54,4 @@ temp/
 *.log
 logs/ 
 
-
-# bin   
-codelens
 
