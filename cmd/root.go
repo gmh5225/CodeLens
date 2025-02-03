@@ -69,6 +69,6 @@ func init() {
 	rootCmd.PersistentFlags().IntVarP(&cloneDepth, "depth", "d", 1, "Git clone depth (0 for full history)")
 	rootCmd.PersistentFlags().BoolVar(&skipTags, "skip-tags", true, "Skip downloading Git tags")
 	rootCmd.PersistentFlags().StringArrayVarP(&filterPaths, "filter", "f", []string{}, "File patterns to clone (empty for all files)")
-	rootCmd.PersistentFlags().StringArrayVarP(&includePattern, "include", "i", []string{"*.go", "*.md"}, "File patterns to include")
-	rootCmd.PersistentFlags().StringArrayVarP(&excludePattern, "exclude", "e", []string{"vendor/*", "*_test.go"}, "File patterns to exclude")
+	rootCmd.PersistentFlags().StringArrayVarP(&includePattern, "include", "i", []string{}, "File patterns to include (empty for all files)")
+	rootCmd.PersistentFlags().StringArrayVarP(&excludePattern, "exclude", "e", []string{}, "File patterns to exclude (empty for no exclusions)")
 }

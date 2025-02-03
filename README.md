@@ -83,8 +83,8 @@ codelens cleanall
 - `--skip-tags`: Skip downloading Git tags (default: true)
 - `--filter, -f`: File patterns to clone (empty for all files)
 - `--max-size, -s`: Maximum file size in bytes (default: 10MB)
-- `--include, -i`: File patterns to include (can be specified multiple times)
-- `--exclude, -e`: File patterns to exclude (can be specified multiple times)
+- `--include, -i`: File patterns to include (empty for all files)
+- `--exclude, -e`: File patterns to exclude (empty for no exclusions)
 
 ### Commands
 
