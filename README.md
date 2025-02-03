@@ -53,7 +53,7 @@ codelens --path ./myproject \
   --exclude "vendor/*" --exclude "*_test.go"
 
 # Clean up repository after analysis
-codelens --repo https://github.com/user/repo --clean
+codelens --repo https://github.com/SimonWaldherr/golang-examples --clean
 
 # Clean all cached repositories
 codelens cleanall
