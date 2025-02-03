@@ -13,6 +13,7 @@ var (
 	localPath      string
 	githubRepo     string
 	outputDir      string
+	branch         string
 	includePattern []string
 	excludePattern []string
 )
@@ -56,6 +57,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&localPath, "path", "p", "", "Local path to analyze")
 	rootCmd.PersistentFlags().StringVarP(&githubRepo, "repo", "r", "", "GitHub repository URL")
 	rootCmd.PersistentFlags().StringVarP(&outputDir, "output", "o", ".", "Output directory for analysis results")
+	rootCmd.PersistentFlags().StringVarP(&branch, "branch", "b", "", "Git branch to analyze (default: repository's default branch)")
 	rootCmd.PersistentFlags().StringArrayVarP(&includePattern, "include", "i", []string{"*.go", "*.md"}, "File patterns to include")
 	rootCmd.PersistentFlags().StringArrayVarP(&excludePattern, "exclude", "e", []string{"vendor/*", "*_test.go"}, "File patterns to exclude")
 }

@@ -32,6 +32,9 @@ go install github.com/gmh5225/codelens@commit-hash
 ### Analyze GitHub Repository
 ```bash
 codelens --repo https://github.com/SimonWaldherr/golang-examples --output ./analysis
+
+# Analyze specific branch
+codelens --repo https://github.com/SimonWaldherr/golang-examples --branch main --output ./analysis
 ```
 
 ### Analyze Local Directory
@@ -55,6 +58,7 @@ codelens --path ./myproject \
 - `--repo, -r`: GitHub repository URL
 - `--path, -p`: Local directory path
 - `--output, -o`: Output directory (default: ".")
+- `--branch, -b`: Git branch to analyze (default: repository's default branch)
 - `--max-size, -s`: Maximum file size in bytes (default: 10MB)
 - `--include, -i`: File patterns to include (can be specified multiple times)
 - `--exclude, -e`: File patterns to exclude (can be specified multiple times)

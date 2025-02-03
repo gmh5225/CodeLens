@@ -21,7 +21,7 @@ func analyzeGitRepo(repoURL, outputDir string) error {
 	cloneConfig := types.CloneConfig{
 		URL:       repoURL,
 		LocalPath: repoDir,
-		Branch:    "master",
+		Branch:    branch,
 		KeepFiles: true,
 	}
 
