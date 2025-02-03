@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gmh5225/codelens/pkg/codelens"
 	"github.com/gmh5225/codelens/pkg/git"
@@ -17,20 +18,40 @@ func analyzeGitRepo(repoURL, outputDir string) error {
 		return err
 	}
 
-	// Clone repository
-	cloneConfig := types.CloneConfig{
-		URL:       repoURL,
-		LocalPath: repoDir,
-		Branch:    branch,
-		KeepFiles: true,
+	// Check if repository already exists
+	if _, err := os.Stat(repoDir); err == nil {
+		fmt.Println("Using existing repository...")
+	} else {
+		// Clone repository
+		cloneConfig := types.CloneConfig{
+			URL:       repoURL,
+			LocalPath: repoDir,
+			Branch:    branch,
+			KeepFiles: !cleanRepo,
+		}
+
+		fmt.Println("Cloning repository...")
+		if err := git.CloneRepository(cloneConfig); err != nil {
+			return fmt.Errorf("clone failed: %w", err)
+		}
 	}
 
-	fmt.Println("Cloning repository...")
-	if err := git.CloneRepository(cloneConfig); err != nil {
-		return fmt.Errorf("clone failed: %w", err)
+	// Analyze the repository
+	err = analyzeLocalPath(repoDir, outputDir)
+
+	// Clean up if requested and if we cloned the repo
+	if cleanRepo {
+		fmt.Println("Cleaning up repository...")
+		if _, err := os.Stat(repoDir); err == nil {
+			if cleanErr := os.RemoveAll(repoDir); cleanErr != nil {
+				fmt.Printf("Warning: failed to clean up repository: %v\n", cleanErr)
+			} else {
+				fmt.Println("Repository cleaned up successfully")
+			}
+		}
 	}
 
-	return analyzeLocalPath(repoDir, outputDir)
+	return err
 }
 
 func analyzeLocalPath(path, outputDir string) error {
@@ -66,6 +87,13 @@ func getRepoDir(repoURL string) (string, error) {
 
 	// Create .codelens/repos directory under user's home
 	cacheDir := filepath.Join(homeDir, ".codelens", "repos")
+	if err := os.MkdirAll(cacheDir, 0755); err != nil {
+		return "", fmt.Errorf("failed to create cache directory: %w", err)
+	}
 
-	return cacheDir, nil
+	// Extract repository name from URL
+	repoName := filepath.Base(strings.TrimSuffix(repoURL, ".git"))
+
+	// Return full path including repository name
+	return filepath.Join(cacheDir, repoName), nil
 }

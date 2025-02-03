@@ -51,17 +51,30 @@ codelens --path ./myproject --max-size 5242880
 codelens --path ./myproject \
   --include "*.go" --include "*.md" \
   --exclude "vendor/*" --exclude "*_test.go"
+
+# Clean up repository after analysis
+codelens --repo https://github.com/user/repo --clean
+
+# Clean all cached repositories
+codelens cleanall
 ```
 
 ## Command Line Options
+
+### Global Flags
 
 - `--repo, -r`: GitHub repository URL
 - `--path, -p`: Local directory path
 - `--output, -o`: Output directory (default: ".")
 - `--branch, -b`: Git branch to analyze (default: repository's default branch)
+- `--clean, -c`: Clean up repository after analysis
 - `--max-size, -s`: Maximum file size in bytes (default: 10MB)
 - `--include, -i`: File patterns to include (can be specified multiple times)
 - `--exclude, -e`: File patterns to exclude (can be specified multiple times)
+
+### Commands
+
+- `cleanall`: Remove all cached repositories in ~/.codelens directory
 
 ## Output Format
 
