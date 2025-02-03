@@ -5,44 +5,9 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/gmh5225/codelens/pkg/types"
 )
-
-// DefaultIgnorePatterns default patterns for files to ignore
-var DefaultIgnorePatterns = []string{
-	// Version control
-	".git", ".svn", ".hg",
-	".gitignore", ".gitattributes", ".gitmodules",
-
-	// Build and dependency directories
-	"node_modules", "vendor", "dist", "build",
-	"target", "bin", "obj",
-
-	// IDEs and editors
-	".idea", ".vscode", ".vs",
-	"*.swp", "*.swo", "*.swn",
-
-	// Temporary files
-	"*.tmp", "*.temp", "*.bak",
-	".DS_Store", "Thumbs.db",
-
-	// Binary and executable files
-	"*.exe", "*.dll", "*.so", "*.dylib",
-	"*.bin", "*.dat",
-
-	// Compressed files
-	"*.zip", "*.rar", "*.7z", "*.gz", "*.tar",
-
-	// Media files
-	"*.jpg", "*.jpeg", "*.png", "*.gif", "*.ico",
-	"*.mp3", "*.mp4", "*.avi", "*.mov",
-
-	// Compilation cache
-	"*.pyc", "*.pyo", "*.pyd", "__pycache__",
-	"*.class", "*.o", "*.obj",
-}
 
 // CollectCode collects code from local path
 func CollectCode(config types.CodeLensConfig) (*types.CodeLensResult, error) {
@@ -159,71 +124,4 @@ func readFileContent(path string) (string, error) {
 	}
 
 	return string(content), nil
-}
-
-func getFileType(path string) string {
-	ext := strings.ToLower(filepath.Ext(path))
-	switch ext {
-	// Programming languages
-	case ".go":
-		return "golang"
-	case ".py":
-		return "python"
-	case ".js", ".jsx", ".ts", ".tsx":
-		return "javascript"
-	case ".java":
-		return "java"
-	case ".cpp", ".cc", ".cxx", ".c++", ".hpp":
-		return "cpp"
-	case ".c", ".h":
-		return "c"
-	case ".cs":
-		return "csharp"
-	case ".rb":
-		return "ruby"
-	case ".php":
-		return "php"
-	case ".rs":
-		return "rust"
-	case ".swift":
-		return "swift"
-	case ".kt", ".kts":
-		return "kotlin"
-
-	// Markup languages and configuration files
-	case ".md", ".markdown":
-		return "markdown"
-	case ".json":
-		return "json"
-	case ".xml":
-		return "xml"
-	case ".yaml", ".yml":
-		return "yaml"
-	case ".toml":
-		return "toml"
-	case ".ini":
-		return "ini"
-
-	// Scripting languages
-	case ".sh", ".bash":
-		return "shell"
-	case ".ps1":
-		return "powershell"
-	case ".bat", ".cmd":
-		return "batch"
-
-	// Other common file types
-	case ".sql":
-		return "sql"
-	case ".html", ".htm":
-		return "html"
-	case ".css", ".scss", ".sass", ".less":
-		return "css"
-
-	case "":
-		return "unknown"
-	default:
-		// Return extension without dot
-		return ext[1:]
-	}
 }
