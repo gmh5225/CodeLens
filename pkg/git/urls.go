@@ -48,9 +48,48 @@ func ParseGitHubURL(url string) (owner, repo string) {
 	return "", ""
 }
 
+// LanguageInfo represents repository language information
+type LanguageInfo struct {
+	Stats       []LanguageStats
+	TotalBytes  int
+	PrimaryLang string
+}
+
 type LanguageStats struct {
 	Language string
 	Bytes    int
+}
+
+// NewLanguageInfo creates a new LanguageInfo from language statistics
+func NewLanguageInfo(stats []LanguageStats) *LanguageInfo {
+	if len(stats) == 0 {
+		return &LanguageInfo{}
+	}
+
+	total := 0
+	for _, stat := range stats {
+		total += stat.Bytes
+	}
+
+	return &LanguageInfo{
+		Stats:       stats,
+		TotalBytes:  total,
+		PrimaryLang: stats[0].Language,
+	}
+}
+
+// GetPercentage returns the percentage of a language in the repository
+func (li *LanguageInfo) GetPercentage(lang string) float64 {
+	if li.TotalBytes == 0 {
+		return 0
+	}
+
+	for _, stat := range li.Stats {
+		if stat.Language == lang {
+			return float64(stat.Bytes) * 100 / float64(li.TotalBytes)
+		}
+	}
+	return 0
 }
 
 // GetGitHubLanguages retrieves language statistics from GitHub API
@@ -89,10 +128,14 @@ func GetGitHubLanguages(repo string) ([]LanguageStats, error) {
 }
 
 // GetRepoLanguages retrieves repository language statistics (currently GitHub only)
-func GetRepoLanguages(repo string) ([]LanguageStats, error) {
+func GetRepoLanguages(repo string) (*LanguageInfo, error) {
 	// Check if it's a GitHub repository
 	if strings.Contains(repo, "github.com") {
-		return GetGitHubLanguages(repo)
+		stats, err := GetGitHubLanguages(repo)
+		if err != nil {
+			return nil, err
+		}
+		return NewLanguageInfo(stats), nil
 	}
 	return nil, fmt.Errorf("language statistics are currently only supported for GitHub repositories")
 }

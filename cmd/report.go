@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/gmh5225/codelens/pkg/git"
 	"github.com/gmh5225/codelens/pkg/types"
 )
 
@@ -26,6 +27,19 @@ func generateReport(result *types.CodeLensResult, basePath, outputPath string) e
 	content.WriteString(fmt.Sprintf("- Include patterns: %v\n", includePattern))
 	content.WriteString(fmt.Sprintf("- Exclude patterns: %v\n", excludePattern))
 	content.WriteString("\n")
+
+	// Write language statistics if available
+	if githubRepo != "" {
+		langInfo, err := git.GetRepoLanguages(githubRepo)
+		if err == nil && langInfo.PrimaryLang != "" {
+			content.WriteString("## Language Statistics\n")
+			content.WriteString("Based on GitHub's language detection:\n\n")
+			content.WriteString(fmt.Sprintf("Primary language: **%s** (%.2f%%)\n\n",
+				langInfo.PrimaryLang,
+				langInfo.GetPercentage(langInfo.PrimaryLang),
+			))
+		}
+	}
 
 	// Write summary
 	content.WriteString("## Repository Overview\n")

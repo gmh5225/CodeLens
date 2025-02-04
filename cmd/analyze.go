@@ -11,14 +11,6 @@ import (
 	"github.com/gmh5225/codelens/pkg/types"
 )
 
-func getTotalBytes(langs []git.LanguageStats) int {
-	total := 0
-	for _, lang := range langs {
-		total += lang.Bytes
-	}
-	return total
-}
-
 func analyzeGitRepo(repoURL, outputDir string) error {
 	// Get repo directory
 	repoDir, err := getRepoDir(repoURL)
@@ -27,17 +19,17 @@ func analyzeGitRepo(repoURL, outputDir string) error {
 	}
 
 	// Get repository language statistics
-	langs, err := git.GetRepoLanguages(repoURL)
+	langInfo, err := git.GetRepoLanguages(repoURL)
 	if err != nil {
 		if strings.Contains(err.Error(), "only supported for GitHub") {
 			fmt.Println("Note: Language statistics are only available for GitHub repositories")
 		} else {
 			fmt.Printf("Warning: Failed to get repository language stats: %v\n", err)
 		}
-	} else if len(langs) > 0 {
+	} else if langInfo.PrimaryLang != "" {
 		fmt.Printf("Primary language (GitHub): %s (%.2f%%)\n",
-			langs[0].Language,
-			float64(langs[0].Bytes)*100/float64(getTotalBytes(langs)),
+			langInfo.PrimaryLang,
+			langInfo.GetPercentage(langInfo.PrimaryLang),
 		)
 	}
 
