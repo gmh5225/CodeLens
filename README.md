@@ -1,6 +1,6 @@
 # CodeLens
 
-CodeLens is a command-line tool for analyzing source code repositories. It can analyze both local directories and GitHub repositories, generating comprehensive markdown reports suitable for LLM (Large Language Model) processing.
+CodeLens is a command-line tool for analyzing source code repositories. It can analyze both local directories and Remote repositories, generating comprehensive markdown reports suitable for LLM (Large Language Model) processing.
 
 ## Features
 
