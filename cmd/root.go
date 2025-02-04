@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/gmh5225/codelens/pkg/version"
 	"github.com/spf13/cobra"
 )
 
@@ -55,6 +56,14 @@ It can analyze both local directories and GitHub repositories.`,
 	},
 }
 
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Print the version number of CodeLens",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Printf("CodeLens %s\n", version.Version)
+	},
+}
+
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -63,8 +72,10 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.AddCommand(versionCmd)
+
 	// Define flags
-	rootCmd.PersistentFlags().Float64VarP(&maxFileSize, "max-size", "s", -1, "Maximum file size in MB (-1 for no limit)")
+	rootCmd.PersistentFlags().Float64VarP(&maxFileSize, "max-size", "s", 10, "Maximum size per file in MB (default: 10MB). Files larger than this will be skipped during analysis")
 	rootCmd.PersistentFlags().StringVarP(&localPath, "path", "p", "", "Local path to analyze")
 	rootCmd.PersistentFlags().StringVarP(&githubRepo, "repo", "r", "", "GitHub repository URL")
 	rootCmd.PersistentFlags().StringVarP(&outputDir, "output", "o", ".", "Output directory for analysis results")

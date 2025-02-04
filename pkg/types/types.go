@@ -32,8 +32,16 @@ type FileContent struct {
 
 // CodeLensResult represents collection results
 type CodeLensResult struct {
-	Files      []FileContent // Collected files
-	TotalSize  int64         // Total size
-	TotalFiles int           // Total number of files
-	Summary    string        // Summary information
+	Files      []FileContent            // Collected files
+	TotalSize  int64                    // Total size
+	TotalFiles int                      // Total number of files
+	Summary    string                   // Summary information
+	Languages  map[string]LanguageStats // Language statistics
+}
+
+// LanguageStats represents statistics for a programming language
+type LanguageStats struct {
+	Files int64  // Number of files
+	Size  int64  // Total size in bytes
+	Color string // Language color (for visualization)
 }
