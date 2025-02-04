@@ -4,7 +4,7 @@ CodeLens is a command-line tool for analyzing source code repositories. It can a
 
 ## Features
 
-- Analyze GitHub repositories directly
+- Analyze Remote repositories directly
 - Process local code directories
 - Configurable file size limits
 - Customizable file inclusion/exclusion patterns
@@ -37,7 +37,7 @@ go install github.com/gmh5225/codelens@commit-hash
 
 > Note: The `--repo` and `--path` flags are mutually exclusive. You must specify exactly one of them.
 
-### Analyze GitHub Repository
+### Analyze Remote Repository
 ```bash
 codelens --repo https://github.com/SimonWaldherr/golang-examples --output ./analysis
 
@@ -79,7 +79,7 @@ codelens cleanall
 
 ### Global Flags
 
-- `--repo, -r`: GitHub repository URL
+- `--repo, -r`: Remote repository URL
 - `--path, -p`: Local directory path
 - `--output, -o`: Output directory (default: ".")
 - `--branch, -b`: Git branch to analyze (default: repository's default branch)
@@ -138,7 +138,7 @@ Possible reasons:
 
 ## Cache Directory
 
-CodeLens caches GitHub repositories in `~/.codelens/repos/` to avoid repeated downloads.
+CodeLens caches Remote repositories in `~/.codelens/repos/` to avoid repeated downloads.
 
 ## Requirements
 
