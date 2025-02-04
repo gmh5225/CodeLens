@@ -21,9 +21,15 @@ go install github.com/gmh5225/codelens@main
 
 This will install the `codelens` binary to your `$GOPATH/bin` directory. Make sure your `$GOPATH/bin` is in your `PATH`.
 ```bash
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
-source ~/.bashrc or source ~/.zshrc
+# for bash
+echo 'export GOPATH=$HOME/go' >> ~/.bashrc
+echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
+source ~/.bashrc
+
+# for zsh
+echo 'export GOPATH=$HOME/go' >> ~/.zshrc
+echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.zshrc
+source ~/.zshrc
 ```
 
 Alternatively, you can specify a specific version or commit:
