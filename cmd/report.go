@@ -14,6 +14,16 @@ import (
 func generateReport(result *types.CodeLensResult, basePath, outputPath string) error {
 	var content strings.Builder
 
+	// Check if there are any files
+	if len(result.Files) == 0 {
+		content.WriteString("# No files were analyzed\n\n")
+		content.WriteString("Possible reasons:\n")
+		content.WriteString("- All files exceeded size limit\n")
+		content.WriteString("- No files matched include patterns\n")
+		content.WriteString("- All files matched exclude patterns\n")
+		return os.WriteFile(outputPath, []byte(content.String()), 0644)
+	}
+
 	// Write header
 	content.WriteString(fmt.Sprintf("# Source Code Analysis for Repository: %s\n\n", filepath.Base(basePath)))
 	content.WriteString("This document contains a comprehensive analysis of the source code, including file structure and content. The analysis is designed to help understand the codebase structure and implementation details.\n\n")

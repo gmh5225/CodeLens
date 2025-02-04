@@ -100,6 +100,7 @@ codelens cleanall
 
 CodeLens generates a markdown report (`codelens.md`) with the following structure:
 
+### When Files Are Found
 ```markdown
 # Source Code Analysis for Repository: <repo-name>
 
@@ -110,6 +111,11 @@ This document contains a comprehensive analysis of the source code...
 - Include patterns: [*.go *.md]
 - Exclude patterns: [vendor/* *_test.go]
 
+## Language Statistics (GitHub repositories only)
+Based on GitHub's language detection:
+
+Primary language: **Go** (85.2%)
+
 ## Repository Overview
 Key statistics about the analyzed codebase...
 
@@ -118,6 +124,16 @@ Below is the list of analyzed source files...
 
 ## File Contents
 ......
+```
+
+### When No Files Are Found
+```markdown
+# No files were analyzed
+
+Possible reasons:
+- All files exceeded size limit
+- No files matched include patterns
+- All files matched exclude patterns
 ```
 
 ## Cache Directory
