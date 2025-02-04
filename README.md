@@ -15,7 +15,6 @@ CodeLens is a command-line tool for analyzing source code repositories. It can a
 ## Installation
 
 ```bash
-go clean -modcache
 go install github.com/gmh5225/codelens@main
 ```
 
