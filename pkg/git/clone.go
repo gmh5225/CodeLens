@@ -104,7 +104,7 @@ func CloneRepository(config types.CloneConfig) error {
 	// Add sparse checkout if paths are specified
 	if len(config.FilterPaths) > 0 && config.FilterPaths[0] != "" {
 		args = append(args, "--sparse")
-		args = append(args, "--no-checkout") // 先不检出文件，等设置好 sparse-checkout 后再检出
+		args = append(args, "--no-checkout") // Defer checkout until sparse-checkout is configured
 	}
 
 	// Add depth parameter
