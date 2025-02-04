@@ -32,34 +32,6 @@ func generateReport(result *types.CodeLensResult, basePath, outputPath string) e
 	content.WriteString("Key statistics about the analyzed codebase:\n\n")
 	content.WriteString(result.Summary)
 
-	// Add language statistics
-	content.WriteString("\n## Primary Language\n")
-
-	// Sort languages by size
-	type langStat struct {
-		name  string
-		stats types.LanguageStats
-	}
-	var langs []langStat
-	for name, stats := range result.Languages {
-		langs = append(langs, langStat{name, stats})
-	}
-	sort.Slice(langs, func(i, j int) bool {
-		return langs[i].stats.Size > langs[j].stats.Size
-	})
-
-	// Only display the primary language
-	if len(langs) > 0 {
-		lang := langs[0]
-		percentage := float64(lang.stats.Size) / float64(result.TotalSize) * 100
-		content.WriteString(fmt.Sprintf("Primary language is **%s** with %d files (%.2f%% of codebase)\n",
-			lang.name,
-			lang.stats.Files,
-			percentage,
-		))
-	}
-	content.WriteString("\n")
-
 	// Write file structure
 	content.WriteString("## File Structure\n")
 	content.WriteString("Below is the list of analyzed source files in this repository:\n\n")
