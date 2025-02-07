@@ -168,4 +168,15 @@ var DefaultIgnorePatterns = []string{
 	"*.phar", "composer.phar",
 	"*.pdb", "*.cache", "*.resources",
 	"*.deploy", "*.rdl.data",
+
+	// license files
+	"LICENSE", "LICENSE.md", "LICENSE.txt", "LICENSE.md", "LICENSE.txt",
+	"COPYING", "COPYING.md", "COPYING.txt",
+	"COPYRIGHT", "COPYRIGHT.md", "COPYRIGHT.txt",
+	"AUTHORS", "AUTHORS.md", "AUTHORS.txt",
+	"CONTRIBUTORS", "CONTRIBUTORS.md", "CONTRIBUTORS.txt",
+	"NOTICE", "NOTICE.md", "NOTICE.txt",
+	"CHANGELOG", "CHANGELOG.md", "CHANGELOG.txt",
+	"HISTORY", "HISTORY.md", "HISTORY.txt",
+	"RELEASE", "RELEASE.md", "RELEASE.txt",
 }

@@ -76,7 +76,7 @@ func generateReport(result *types.CodeLensResult, basePath, outputPath string) e
 	content.WriteString("## File Contents\n\n")
 	for _, file := range result.Files {
 		relPath, _ := filepath.Rel(basePath, file.Path)
-		content.WriteString(fmt.Sprintf("### %s\n", relPath))
+		content.WriteString(fmt.Sprintf("### %s (%d lines)\n", relPath, file.LineCount))
 		content.WriteString("```" + file.FileType + "\n")
 		content.WriteString(file.Content)
 		content.WriteString("\n```\n\n")

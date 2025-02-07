@@ -24,10 +24,11 @@ type CodeLensConfig struct {
 
 // FileContent represents collected file content
 type FileContent struct {
-	Path     string // File path
-	Content  string // File content
-	Size     int64  // File size
-	FileType string // File type
+	Path      string // File path
+	Content   string // File content
+	Size      int64  // File size in bytes
+	FileType  string // File type/extension
+	LineCount int    // Total number of lines in the file
 }
 
 // CodeLensResult represents collection results

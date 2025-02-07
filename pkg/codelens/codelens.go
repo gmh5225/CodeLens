@@ -2,9 +2,9 @@ package codelens
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gmh5225/codelens/pkg/types"
 )
@@ -42,17 +42,18 @@ func CollectCode(config types.CodeLensConfig) (*types.CodeLensResult, error) {
 		}
 
 		// Read file content
-		content, err := readFileContent(path)
+		content, lineCount, err := readFileContent(path)
 		if err != nil {
 			return fmt.Errorf("failed to read file %s: %w", path, err)
 		}
 
 		// Add to results
 		result.Files = append(result.Files, types.FileContent{
-			Path:     path,
-			Content:  content,
-			Size:     info.Size(),
-			FileType: getFileType(path),
+			Path:      path,
+			Content:   content,
+			Size:      info.Size(),
+			FileType:  getFileType(path),
+			LineCount: lineCount,
 		})
 
 		result.TotalSize += info.Size()
@@ -111,17 +112,15 @@ func isExcluded(path string, excludePatterns []string) bool {
 	return false
 }
 
-func readFileContent(path string) (string, error) {
-	f, err := os.Open(path)
+func readFileContent(path string) (string, int, error) {
+	content, err := os.ReadFile(path)
 	if err != nil {
-		return "", err
-	}
-	defer f.Close()
-
-	content, err := io.ReadAll(f)
-	if err != nil {
-		return "", err
+		return "", 0, err
 	}
 
-	return string(content), nil
+	// Convert content to string and count lines
+	contentStr := string(content)
+	lineCount := strings.Count(contentStr, "\n") + 1
+
+	return contentStr, lineCount, nil
 }
