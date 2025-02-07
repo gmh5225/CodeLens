@@ -31,6 +31,7 @@ var DefaultIgnorePatterns = []string{
 	"xcuserdata", "*.xcscmblueprint",
 	"*.xcuserstate", "*.xcassets",
 	"*.storyboard", "*.xib",
+	".github",
 
 	// IDEs and editors
 	".idea", ".vscode", ".vs",
