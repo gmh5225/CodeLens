@@ -34,7 +34,7 @@ source ~/.zshrc
 
 Alternatively, you can specify a specific version or commit:
 ```bash
-go install github.com/gmh5225/codelens@v1.0.4
+go install github.com/gmh5225/codelens@v1.0.5
 # or use a specific commit
 go install github.com/gmh5225/codelens@commit-hash
 ```
