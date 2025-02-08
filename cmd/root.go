@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/gmh5225/codelens/pkg/version"
 	"github.com/spf13/cobra"
@@ -65,13 +66,52 @@ var versionCmd = &cobra.Command{
 }
 
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	cobra.CheckErr(rootCmd.Execute())
+}
+
+// check if the error message is related to the repository
+func isRepoError(errMsg string) bool {
+	repoErrors := []string{
+		"repository not found",
+		"clone failed",
+		"authentication failed",
+		"repository does not exist",
+		"remote: Repository not found",
+		"fatal: repository",
+		"could not read from remote repository",
+		"exit status",
 	}
+
+	errMsg = strings.ToLower(errMsg)
+	for _, repoErr := range repoErrors {
+		if strings.Contains(errMsg, strings.ToLower(repoErr)) {
+			return true
+		}
+	}
+	return false
 }
 
 func init() {
+	// set custom error handling
+	rootCmd.SilenceUsage = true  // default not show usage
+	rootCmd.SilenceErrors = true // let us handle the error output
+
+	// add error handling function
+	cobra.OnFinalize(func() {
+		if err := recover(); err != nil {
+			if e, ok := err.(error); ok {
+				if isRepoError(e.Error()) {
+					fmt.Fprintf(os.Stderr, "Error: %v\n", e)
+				} else {
+					fmt.Fprintf(os.Stderr, "Error: %v\n", e)
+					rootCmd.Usage()
+				}
+				os.Exit(1)
+			}
+			panic(err) // rethrow non-error type panic
+		}
+	})
+
 	rootCmd.AddCommand(versionCmd)
 
 	// Define flags

@@ -47,7 +47,14 @@ func analyzeGitRepo(repoURL, outputDir string) error {
 
 	fmt.Println("Cloning repository...")
 	if err := git.CloneRepository(cloneConfig); err != nil {
-		return fmt.Errorf("clone failed: %w", err)
+		// extract the original error message from git command
+		if strings.Contains(err.Error(), "fatal: ") {
+			errMsg := err.Error()
+			if idx := strings.Index(errMsg, "fatal: "); idx != -1 {
+				return fmt.Errorf("%s", strings.TrimSpace(errMsg[idx:]))
+			}
+		}
+		return fmt.Errorf("repository error: %s", err)
 	}
 
 	// Analyze the repository
