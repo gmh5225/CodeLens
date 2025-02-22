@@ -28,6 +28,11 @@ func generateReport(result *types.CodeLensResult, basePath, outputPath string) e
 	content.WriteString(fmt.Sprintf("# Source Code Analysis for Repository: %s\n\n", filepath.Base(basePath)))
 	content.WriteString("This document contains a comprehensive analysis of the source code, including file structure and content. The analysis is designed to help understand the codebase structure and implementation details.\n\n")
 
+	// Write summary first
+	content.WriteString("## Summary\n")
+	content.WriteString(result.Summary)
+	content.WriteString("\n")
+
 	content.WriteString("## Analysis Configuration\n")
 	if maxFileSize == -1 {
 		content.WriteString("- Max file size: no limit\n")
@@ -51,10 +56,32 @@ func generateReport(result *types.CodeLensResult, basePath, outputPath string) e
 		}
 	}
 
-	// Write summary
-	content.WriteString("## Repository Overview\n")
-	content.WriteString("Key statistics about the analyzed codebase:\n\n")
-	content.WriteString(result.Summary)
+	// Write token statistics
+	content.WriteString("## Token Statistics\n")
+	content.WriteString("Token distribution by file:\n\n")
+
+	// Sort files by token count
+	type fileTokens struct {
+		path   string
+		tokens int
+	}
+	var tokenStats []fileTokens
+	for _, file := range result.Files {
+		relPath, _ := filepath.Rel(basePath, file.Path)
+		tokenStats = append(tokenStats, fileTokens{relPath, file.Tokens})
+	}
+	sort.Slice(tokenStats, func(i, j int) bool {
+		return tokenStats[i].tokens > tokenStats[j].tokens
+	})
+
+	// Display top 10 files by token count
+	for i, stat := range tokenStats {
+		if i >= 10 {
+			break
+		}
+		content.WriteString(fmt.Sprintf("- %s: %d tokens\n", stat.path, stat.tokens))
+	}
+	content.WriteString("\n")
 
 	// Write file structure
 	content.WriteString("## File Structure\n")
@@ -76,7 +103,7 @@ func generateReport(result *types.CodeLensResult, basePath, outputPath string) e
 	content.WriteString("## File Contents\n\n")
 	for _, file := range result.Files {
 		relPath, _ := filepath.Rel(basePath, file.Path)
-		content.WriteString(fmt.Sprintf("### %s (%d lines)\n", relPath, file.LineCount))
+		content.WriteString(fmt.Sprintf("### %s (%d lines, %d tokens)\n", relPath, file.LineCount, file.Tokens))
 		content.WriteString("```" + file.FileType + "\n")
 		content.WriteString(file.Content)
 		content.WriteString("\n```\n\n")

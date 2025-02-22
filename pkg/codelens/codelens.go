@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/gmh5225/codelens/pkg/tokenizer"
 	"github.com/gmh5225/codelens/pkg/types"
 )
 
@@ -47,6 +48,10 @@ func CollectCode(config types.CodeLensConfig) (*types.CodeLensResult, error) {
 			return fmt.Errorf("failed to read file %s: %w", path, err)
 		}
 
+		// Count tokens
+		tokens := tokenizer.CountTokens(content)
+		result.TotalTokens += tokens
+
 		// Add to results
 		result.Files = append(result.Files, types.FileContent{
 			Path:      path,
@@ -54,6 +59,7 @@ func CollectCode(config types.CodeLensConfig) (*types.CodeLensResult, error) {
 			Size:      info.Size(),
 			FileType:  getFileType(path),
 			LineCount: lineCount,
+			Tokens:    tokens,
 		})
 
 		result.TotalSize += info.Size()
@@ -68,9 +74,10 @@ func CollectCode(config types.CodeLensConfig) (*types.CodeLensResult, error) {
 
 	// Generate summary information
 	result.Summary = fmt.Sprintf(
-		"# Summary\n- Total files: %d\n- Total size: %.2f MB\n",
+		"- Total files: %d\n- Total size: %.2f MB\n- Total tokens: %d\n",
 		result.TotalFiles,
 		float64(result.TotalSize)/(1024*1024),
+		result.TotalTokens,
 	)
 
 	return result, nil

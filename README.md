@@ -11,7 +11,11 @@ CodeLens is a command-line tool for analyzing source code repositories. It can a
 - Markdown report generation
 - Git repository caching
 - Support for multiple programming languages
-
+- Token counting optimized for code analysis:
+  - Accurate token counting for both code and text
+  - Special handling for programming constructs
+  - Support for CJK and Unicode characters
+  - URL and email address smart tokenization
 ## Installation
 
 ```bash
@@ -112,6 +116,11 @@ CodeLens generates a markdown report (`codelens.md`) with the following structur
 
 This document contains a comprehensive analysis of the source code...
 
+## Summary
+- Total files: 115
+- Total size: 0.24 MB
+- Total tokens: 25880
+
 ## Analysis Configuration
 - Max file size: 10.00 MB
 - Include patterns: [*.go *.md]
@@ -121,6 +130,9 @@ This document contains a comprehensive analysis of the source code...
 Based on GitHub's language detection:
 
 Primary language: **Go** (85.2%)
+
+## Token Statistics
+Token distribution by file...
 
 ## Repository Overview
 Key statistics about the analyzed codebase...
