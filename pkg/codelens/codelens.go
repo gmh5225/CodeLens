@@ -32,6 +32,16 @@ func CollectCode(config types.CodeLensConfig) (*types.CodeLensResult, error) {
 			return nil
 		}
 
+		// Skip symlinks pointing to directories or other non-regular files.
+		// filepath.Walk uses os.Lstat, so symlinks are not followed automatically;
+		// we use os.Stat here to resolve the symlink and check the target type.
+		if info.Mode()&os.ModeSymlink != 0 {
+			resolved, statErr := os.Stat(path)
+			if statErr != nil || !resolved.Mode().IsRegular() {
+				return nil
+			}
+		}
+
 		// Check file size
 		if config.MaxFileSize != -1 && info.Size() > config.MaxFileSize {
 			return nil
